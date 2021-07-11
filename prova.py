@@ -7,7 +7,6 @@ myfields=['"NOME"', '"Val1"', '"Val2"', '"Val3"', '"Val4"',
          '"Val19"', '"Val20"', '"Val21"', '"Val22"', '"Val23"',
          '"Val24"', '"Val25"']
 if this.load("samples/prova.txt",myfields):
-    this.path="cacca/pupu/bidet"
     this.name="write.txt"
     this.save()
 #this.reset()
