@@ -160,7 +160,6 @@ class MyCsvFile:
         self.error=0
         return True
 
-
 """
 -MyCsvError-
     Classe personale per una gestione semplificata di Errori in MyCsv
@@ -171,7 +170,8 @@ class MyCsvError(Exception):
         super().__init__(message)
 
     def __str__(self):
-        return super().__str__()
+        return super().__str__
+
 """
 -PathError-
     Classe personale per una gestione semplificata di Errori in MyCsv
@@ -183,54 +183,3 @@ class PathError(Exception):
 
     def __str__(self):
         return super().__str__()
-
-
-
-class File:
-    def __init__(self):
-        self.New()
-        self.fields=['"NOME"', '"Val1"', '"Val2"', '"Val3"', '"Val4"', '"Val5"',
-                '"Val6"', '"Val7"', '"Val8"', '"Val9"', '"Val10"', '"Val11"',
-                '"Val16"', '"Val17"', '"Val18"', '"Val19"', '"Val20"', '"Val21"',
-                '"Val22"', '"Val23"', '"Val24"', '"Val25"\n']
-    def New(self):
-        self.path=""
-        self.name="Nuovo"
-        self.recipe=[]
-        self.recipe.append([0,'Nuovo Programma di taglio', '', '', '', '', '',
-                '', '', '', '', '', '',
-                '', '', '', '', '', '',
-                '', '', '', ''])
-    def Load(self):
-        #aggiungere controlli validità file
-        path=filedialog.askopenfilename(initialdir = "/",title = "Open file")
-        file=open(path)
-        recipe=[]
-        fields=file.readline().split(",")
-        #print(fields)
-        i=0
-        if fields == self.fields:
-            for x in file:
-                # RIMUOVE \N
-                x=x.strip()
-                # RIMUOVE "
-                x=x.replace('"','')
-                # SEPARA PER ,
-                x=x.split(",")
-                # INSERISCI INDICE NUMERICO
-                x.insert(0,i)
-                recipe.append(x)
-                #print(recipe[i])
-                i+=1
-            file.close()
-            self.path,self.name=os.path.split(path)
-            self.recipe=recipe
-            return True
-        else:
-            return False
-
-    def Save(self):
-        pass
-
-    def SaveAs(self):
-        path=filedialog.asksaveasfilename(initialdir = "/",title = "Save as")
