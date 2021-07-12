@@ -40,6 +40,25 @@ class MyCsvFile:
         self.escapechar="$"
         self.error=0
     """
+    Copia gli attributi dialettici dell'istanza origin
+    """
+    def copy_empty(self,origin):
+        self.delimiter=origin.delimiter
+        self.quotechar=origin.quotechar
+        self.quoting=origin.quoting
+        self.escapechar=origin.escapechar
+    """
+    Copia tutti gli attributi dell'istanza origin
+    """
+    def copy_all(self,origin):
+        self.path=origin.path
+        self.name=origin.name
+        self.fields=origin.fields
+        self.rows=origin.rows
+        self.error=origin.error
+        self.copy_empty(origin)
+
+    """
     Restituisce in forma di stringa una fotografia della classe in quel momento
     utile in fase di controllo
     """

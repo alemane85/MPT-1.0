@@ -5,17 +5,17 @@ from tkinter import messagebox
 import MyCsv
 
 """
-Questa ti serve 
+Questa ti serve
 path=filedialog.askopenfilename(initialdir = "/",title = "Open file")
 """
 class Program:
-
-    def __init__(self):
-        self.name="MPT"
-        self.version="1.0"
+    def __init__(self,name="New App",version="0.0",iconbitmap=0):
+        self.name=name
+        self.version=version
         self.window= tk.Tk()
-        self.window.iconbitmap('mpt_icon.ico')
-        self.file=File()
+        if iconbitmap:
+            self.window.iconbitmap(iconbitmap)
+        self.file=MyCsv.MyCsvFile()
         self.init_menubar()
         self.init_optmenu()
         self.init_frame()
@@ -39,10 +39,7 @@ class Program:
         self.opt["state"]="readonly"
         self.opt.config(width=89)
         self.opt.grid(pady=10, padx=10)
-        self.current_recipe=[0,'Nuovo Programma di taglio', '', '', '', '', '',
-                '', '', '', '', '', '',
-                '', '', '', '', '', '',
-                '', '', '', '']
+
 
     def init_frame(self):
         self.frame=tk.Frame(self.window, width=300, height=400, bg="black")
@@ -69,8 +66,8 @@ class Program:
         self.fmenu = tk.Menu(self.menubar, tearoff=0)
         self.fmenu.add_command(label="Nuovo", command=self.new_file)
         self.fmenu.add_command(label="Apri", command=self.load_file)
-        self.fmenu.add_command(label="Salva", command=self.file.Save)
-        self.fmenu.add_command(label="Salva con nome", command=self.file.Save)
+        self.fmenu.add_command(label="Salva", command=self.save_file)
+        self.fmenu.add_command(label="Salva con nome", command=self.saveas_file)
         self.fmenu.add_separator()
         self.fmenu.add_command(label="Esci", command=self.quit)
         self.menubar.add_cascade(label="File", menu=self.fmenu)
@@ -80,10 +77,12 @@ class Program:
         self.menubar.add_cascade(label="?", menu=self.amenu)
 
     def draw_optmenu(self):
-        nomi=[]
-        for thisrecipe in self.file.recipe:
-            nomi.append(thisrecipe[1])
-        self.opt["values"]=nomi
+        row_names=[]
+        for row in self.file.rows:
+            row_names.append(row[0])
+        self.opt["values"]=row_names
+        print("var row_names=")
+        print(row_names)
         self.opt.current(0)
 
         #if self.optmenu_var_id:
@@ -125,17 +124,18 @@ class Program:
     def update_frame(self,*args):
         selection=self.optmenu_var.get()
         #print(selection)
-        for current in self.file.recipe:
-            if selection == current[1]:
-                self.current_recipe=current
-                print(self.current_recipe)
+        for row in self.file.rows:
+            if selection == row[0]:
+                self.row=row
+                print("update_frame row=")
+                print(self.row)
                 break
         self.draw_frame()
-        # disegnare fram con self.current_recipe a base
+        # disegnare fram con self.row a base
     def draw_frame(self):
         i=1
         for thisentry in self.entry_var:
-            thisentry.set(f"{self.current_recipe[i]}")
+            thisentry.set(f"{self.row[i]}")
             i+=1
 
     def draw_body(self):
@@ -154,16 +154,41 @@ class Program:
         messagebox.showinfo("Informazioni", "Modifica Programmi Taglierina 1.0\nCreato da Manenti Alessio")
 
     def new_file(self):
-        self.file.New()
+        self.file.reset()
+        self.file.path=""
+        self.file.name="New File"
+        self.file.fields=['"NOME"', '"Val1"', '"Val2"', '"Val3"', '"Val4"',
+                 '"Val5"', '"Val6"', '"Val7"', '"Val8"', '"Val9"',
+                 '"Val10"', '"Val11"', '"Val16"', '"Val17"', '"Val18"',
+                 '"Val19"', '"Val20"', '"Val21"', '"Val22"', '"Val23"',
+                 '"Val24"', '"Val25"']
+        self.file.rows=[['Nuovo Programma di taglio', '', '', '', '', '',
+                '', '', '', '', '', '',
+                '', '', '', '', '', '',
+                '', '', '', '']]
+        self.row=self.file.rows[0]
+        self.error=0
         self.draw_window()
         self.draw_body()
 
     def load_file(self):
-        if not self.file.Load():
+        path=filedialog.askopenfilename(initialdir = "/",title = "Open file")
+        puppet_file=MyCsv.MyCsvFile()
+        puppet_file.copy_empty(self.file)
+        print(self.file)
+        print(puppet_file)
+        if not puppet_file.load(path):
             messagebox.showerror("File o percorso non validi", "Impossibile aprire il file selezionato.\nFile non compatibile/danneggiato o percorso errato.")
         else:
+            self.file.copy_all(puppet_file)
             self.draw_window()
             self.draw_body()
+        print(self.file)
+
+    def save_file():
+        pass
+    def saveas_file():
+        pass
 
     def start(self):
         self.window.mainloop()
@@ -173,7 +198,7 @@ class Program:
 
 
 
-program=Program()
+program=Program(name="MPT",version="1.1",iconbitmap="mpt_icon.ico")
 program.new_file()
 program.draw_menubar()
 program.start()
