@@ -2,8 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
-from MyFile import File
+import MyCsv
 
+"""
+Questa ti serve 
+path=filedialog.askopenfilename(initialdir = "/",title = "Open file")
+"""
 class Program:
 
     def __init__(self):
