@@ -12,9 +12,16 @@ class Program:
     def __init__(self,name="New App",version="0.0",iconbitmap=0):
         self.name=name
         self.version=version
+        maxwidth="1200"
+        maxheight="900"
         self.window= tk.Tk()
+        #self.window.state('zoomed')
+        self.window.resizable(False, False)
         if iconbitmap:
             self.window.iconbitmap(iconbitmap)
+        self.window.geometry(f"{maxwidth}x{maxheight}")
+        #.geometry("window width x window height + position right + position down")
+
         self.file=MyCsv.MyCsvFile()
         self.init_menubar()
         self.init_optmenu()
@@ -30,19 +37,19 @@ class Program:
 
     def init_optmenu(self):
         self.optmenu_var=tk.StringVar()
-        self.optmenu_var_id=0
-        self.opt_frame=tk.Frame(self.window, width=580, height=45,)
-        self.opt_frame.grid(pady=10, padx=10)
+        self.opt_frame=tk.Frame(self.window, width=780, height=25,bg="red")
+        self.opt_frame.grid(pady=5, padx=10)
+        self.opt_frame.grid(column=0,row=0,columnspan=12)
         self.opt_frame.grid_propagate(False)
-        #self.opt = tk.OptionMenu(self.opt_frame, self.optmenu_var,["ciao"])
         self.opt = ttk.Combobox(self.opt_frame, textvariable=self.optmenu_var)
         self.opt["state"]="readonly"
         self.opt.config(width=89)
-        self.opt.grid(pady=10, padx=10)
+        self.opt.grid(column=0)
+        #self.opt.grid(pady=10, padx=10)
 
 
     def init_frame(self):
-        self.frame=tk.Frame(self.window, width=300, height=400, bg="black")
+        self.frame=tk.Frame(self.window, width=800, height=400, bg="black")
         self.frame.grid(row=20, column=0)
         self.frame.grid_propagate(False)
         self.entry_var=[]
@@ -58,7 +65,6 @@ class Program:
 
 
     def draw_window(self):
-        self.window.geometry("600x600")
         self.window.title(f"{self.name} v. {self.version} - {self.file.name}")
 
     def draw_menubar(self):
@@ -175,8 +181,6 @@ class Program:
         path=filedialog.askopenfilename(initialdir = "/",title = "Open file")
         puppet_file=MyCsv.MyCsvFile()
         puppet_file.copy_empty(self.file)
-        print(self.file)
-        print(puppet_file)
         if not puppet_file.load(path):
             messagebox.showerror("File o percorso non validi", "Impossibile aprire il file selezionato.\nFile non compatibile/danneggiato o percorso errato.")
         else:
